@@ -11,6 +11,7 @@ import java.util.List;
 public interface ProductRepository extends ElasticsearchRepository<Product, String> {
     List<Product> findByNameOrDescription(String name, String description);
 
+    List<Product> findByName(String name);
     List<Product> findByNameContainingOrDescriptionContaining(String name, String description);
 
     @Query("{\"bool\": {\"should\": [{\"match\": {\"name\": \"?0\"}}, {\"match\": {\"description\": \"?0\"}}]}}")

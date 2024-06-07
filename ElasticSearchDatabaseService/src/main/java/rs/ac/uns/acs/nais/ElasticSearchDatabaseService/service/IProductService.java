@@ -7,7 +7,7 @@ import java.util.List;
 public interface IProductService {
 
     List<Product> findByNameOrDescription(String name, String description);
-
+    List<Product> findByName(String name);
     List<Product> findByNameContainingOrDescriptionContaining(String name, String description);
 
     List<Product> findByCustomQuery(String query);

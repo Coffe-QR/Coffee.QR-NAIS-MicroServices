@@ -39,6 +39,10 @@ public class ProductService implements IProductService {
         return productRepository.findByNameOrDescription(name, description);
     }
 
+    public List<Product> findByName(String name) {
+        return productRepository.findByName(name);
+    }
+
     public List<Product> findByNameContainingOrDescriptionContaining(String name, String description) {
         return productRepository.findByNameContainingOrDescriptionContaining(name, description);
     }

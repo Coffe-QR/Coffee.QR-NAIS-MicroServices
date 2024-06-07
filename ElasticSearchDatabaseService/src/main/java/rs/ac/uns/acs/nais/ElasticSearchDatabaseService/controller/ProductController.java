@@ -34,12 +34,16 @@ public class ProductController {
         return productService.findByNameOrDescription(name, description);
     }
 
+    @GetMapping("findByName")
+    public List<Product> findByName(@RequestParam(value = "name") String name) {
+        return productService.findByName(name);
+    }
+
     @GetMapping("findByNameContainingOrDescriptionContaining")
     public List<Product> findByNameContainingOrDescriptionContaining(@RequestParam(value = "name") String name,
                                                                      @RequestParam(value = "description") String description) {
         return productService.findByNameContainingOrDescriptionContaining(name, description);
     }
-
     @GetMapping("findByCustomQuery")
     public List<Product> findByCustomQuery(@RequestParam(value = "query") String query) {
         return productService.findByCustomQuery(query);
@@ -67,6 +71,11 @@ public class ProductController {
     public List<Product> findByFunctionScore(@RequestParam(value = "searchTerm") String searchTerm,
                                              @RequestParam(value = "boostTerms") String boostTerms) {
         return productService.findByFunctionScore(searchTerm, boostTerms);
+    }
+
+    @GetMapping("findML")
+    public String findML() {
+        return "MLMLML";
     }
 /* 
     @GetMapping(value = "/export-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
