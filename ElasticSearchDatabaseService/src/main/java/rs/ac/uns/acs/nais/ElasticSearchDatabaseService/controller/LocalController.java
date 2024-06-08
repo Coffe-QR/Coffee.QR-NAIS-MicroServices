@@ -85,10 +85,28 @@ public class LocalController {
     @GetMapping("/complex-search")
     public ResponseEntity<?> complexSearch(
             @RequestParam String country,
-            @RequestParam String name,
+            @RequestParam(required = false) String name,
             @RequestParam int capacity) {
         try {
+            if (name == null) {
+                name = "";
+            }
             List<Local> results = localService.getLocalsByCriteria(country, name, capacity);
+            if (results.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No results found");
+            }
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
+
+
+    @GetMapping("/city-sorted-by-average-price")
+    public ResponseEntity<?> getLocalsInCitySortedByAverageItemPrice(@RequestParam String city) {
+        try {
+            List<Local> results = localService.getLocalsInCitySortedByAverageItemPrice(city);
             if (results.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No results found");
             }
