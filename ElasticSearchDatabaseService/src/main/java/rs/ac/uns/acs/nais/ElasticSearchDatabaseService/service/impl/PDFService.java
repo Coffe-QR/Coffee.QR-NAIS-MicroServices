@@ -1,16 +1,18 @@
 package rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.impl;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.*;
+import com.lowagie.text.Font;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Local;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.LocalRepository;
 
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+
 
 @Service
 public class PDFService {
@@ -18,21 +20,58 @@ public class PDFService {
     private LocalRepository localRepository;
 
     public byte[] generatePDFForCity(String city) {
-        Document document = new Document();
+        Document document = new Document(PageSize.A4, 50, 50, 50, 50); // Set document margins
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         try {
             PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();
+
+            Font titleFont = new Font(Font.HELVETICA, 18, Font.BOLD, new Color(0, 76, 153));
+            Font textFont = new Font(Font.HELVETICA, 12, Font.NORMAL, new Color(50, 50, 50));
+
+            // Adding a title
+            Paragraph title = new Paragraph("Locals in " + city, titleFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(20);
+            document.add(title);
+
             List<Local> locals = localRepository.findByCity(city);
 
             for (Local local : locals) {
-                document.add(new Paragraph("Name: " + local.getName()));
-                document.add(new Paragraph("Description: " + local.getDescription()));
-                document.add(new Paragraph("Capacity: " + local.getCapacity()));
-                document.add(new Paragraph("City: " + local.getCity()));
-                document.add(new Paragraph("Country: " + local.getCountry()));
-                document.add(Paragraph.getInstance("\n")); // Add a blank line between entries
+                PdfPTable table = new PdfPTable(new float[]{1, 2});
+                table.setWidthPercentage(100); // Full width
+                table.setSpacingBefore(10f); // Space before table starts
+
+                PdfPCell cell;
+
+                // Local Name
+                cell = new PdfPCell(new Phrase("Name: " + local.getName(), textFont));
+                cell.setBorder(Rectangle.NO_BORDER);
+                table.addCell(cell);
+
+                // Description
+                cell = new PdfPCell(new Phrase("Description: " + local.getDescription(), textFont));
+                cell.setBorder(Rectangle.NO_BORDER);
+                table.addCell(cell);
+
+                // Capacity
+                cell = new PdfPCell(new Phrase("Capacity: " + local.getCapacity(), textFont));
+                cell.setBorder(Rectangle.NO_BORDER);
+                table.addCell(cell);
+
+                // City
+                cell = new PdfPCell(new Phrase("City: " + local.getCity(), textFont));
+                cell.setBorder(Rectangle.NO_BORDER);
+                table.addCell(cell);
+
+                // Country
+                cell = new PdfPCell(new Phrase("Country: " + local.getCountry(), textFont));
+                cell.setBorder(Rectangle.NO_BORDER);
+                table.addCell(cell);
+
+                document.add(table);
+                document.add(new Paragraph("\n")); // Add a blank line between entries
             }
         } catch (DocumentException e) {
             e.printStackTrace();
