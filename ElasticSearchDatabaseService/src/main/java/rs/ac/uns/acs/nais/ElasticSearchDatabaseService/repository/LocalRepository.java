@@ -20,6 +20,9 @@ public interface LocalRepository extends ElasticsearchRepository<Local, String> 
     @Query("{\"bool\": {\"must\": {\"term\": {\"country\": \"?0\"}}}}")
     Page<Local> findByCountry(String country, Pageable pageable);
 
+    @Query("{\"bool\": {\"must\": {\"match\": {\"city\": \"?0\"}}}}")
+    List<Local> findByCity(String city);
+
     /**
      * Pronalazi lokale koji se nalaze u određenoj zemlji i imaju kapacitet u zadanom opsegu (između minCapacity i maxCapacity).
      * Rezultati su sortirani u opadajucem redosledu kapaciteta(implementirano u servisu).

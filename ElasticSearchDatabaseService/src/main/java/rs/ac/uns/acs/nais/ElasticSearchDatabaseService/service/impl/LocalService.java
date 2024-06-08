@@ -45,6 +45,10 @@ public class LocalService implements ILocalService {
         return localRepository.findByCountry(country,pageable);
     }
 
+    public List<Local> findByCity(String city){
+        return localRepository.findByCity(city);
+    }
+
     // ML #1
     public Page<Local> getLocalsByCountryAndCapacitySorted(String country, int minCapacity, int maxCapacity, int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "capacity");
