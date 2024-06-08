@@ -37,6 +37,11 @@ public class ItemController {
         return itemService.findItemById(id).orElse(null);
     }
 
+    @GetMapping("getAllItemsForLocalId/{id}")
+    public List<Item> getAllItemsForLocalId(@PathVariable String id) {
+        return itemService.getAllItemsForLocalId(id);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteItem(@PathVariable String id) {
         itemService.deleteItem(id);

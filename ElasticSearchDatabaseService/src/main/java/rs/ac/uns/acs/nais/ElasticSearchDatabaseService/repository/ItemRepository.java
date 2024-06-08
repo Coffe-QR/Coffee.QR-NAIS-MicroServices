@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends ElasticsearchRepository<Item, String> {
     List<Item> findByNameOrDescription(String name, String description);
+    List<Item> getAllItemsForLocalId(String localId);
 }

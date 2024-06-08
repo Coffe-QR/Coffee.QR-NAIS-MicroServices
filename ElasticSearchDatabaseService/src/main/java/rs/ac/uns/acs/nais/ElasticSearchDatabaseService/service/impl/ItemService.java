@@ -32,4 +32,8 @@ public class ItemService implements IItemService {
     public void deleteItem(String id) {
         itemRepository.deleteById(id);
     }
+
+    public List<Item> getAllItemsForLocalId(String id) {
+        return itemRepository.getAllItemsForLocalId(id);
+    }
 }
