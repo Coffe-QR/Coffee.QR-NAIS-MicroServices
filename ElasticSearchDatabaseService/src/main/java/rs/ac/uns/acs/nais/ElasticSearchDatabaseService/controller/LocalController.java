@@ -86,12 +86,14 @@ public class LocalController {
     public ResponseEntity<?> complexSearch(
             @RequestParam String country,
             @RequestParam(required = false) String name,
-            @RequestParam int capacity) {
+            @RequestParam int capacity,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         try {
             if (name == null) {
                 name = "";
             }
-            List<Local> results = localService.getLocalsByCriteria(country, name, capacity);
+            List<Local> results = localService.getLocalsByCriteria(country, name, capacity, page,size);
             if (results.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No results found");
             }

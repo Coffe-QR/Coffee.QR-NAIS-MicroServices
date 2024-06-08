@@ -2,6 +2,7 @@ package rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
@@ -48,7 +49,8 @@ public interface LocalRepository extends ElasticsearchRepository<Local, String> 
     /**
      * Pronalazi lokale koji se nalaze u određenoj zemlji, imaju kapacitet veći ili jednak zadatom,
      * i gde se naziv lokala podudara sa zadatim tekstom. Upit mora ispuniti uslove za zemlju i kapacitet,
-     * dok je uslov za naziv opcionalan ali povećava relevantnost rezultata.
+     * dok je uslov za naziv opcionalan ali povećava relevantnost rezultata.Rezultati su sortirani u rastucem
+     * redosledu na osnovu capacity-ja
      *
      * @param country  naziv zemlje
      * @param name     naziv lokala
@@ -56,7 +58,7 @@ public interface LocalRepository extends ElasticsearchRepository<Local, String> 
      * @return lista lokalnih objekata koji ispunjavaju uslove pretrage
      */
     @Query("{\"bool\": {\"must\": [{\"term\": {\"country\": \"?0\"}}, {\"range\": {\"capacity\": {\"gte\": ?2}}}], \"should\": [{\"match\": {\"name\": \"?1\"}}], \"minimum_should_match\": ?3}}")
-    List<Local> findByCountryAndNameOrMinimumCapacity(String country, String name, int capacity, int minimumShouldMatch);
+    List<Local> findByCountryAndNameOrMinimumCapacity(String country, String name, int capacity, int minimumShouldMatch, Pageable pageable);
 
     /**
      * Pronalazi sve lokale u određenom gradu i sortira ih po proseku cena itema koje sadrže.

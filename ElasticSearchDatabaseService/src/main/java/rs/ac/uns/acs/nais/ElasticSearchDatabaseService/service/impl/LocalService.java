@@ -59,9 +59,11 @@ public class LocalService implements ILocalService {
 
 
     // ML #3
-    public List<Local> getLocalsByCriteria(String country, String name, int capacity) {
+    public List<Local> getLocalsByCriteria(String country, String name, int capacity, int page, int size) {
         int minimumShouldMatch = (name == null || name.isEmpty()) ? 0 : 1;
-        return localRepository.findByCountryAndNameOrMinimumCapacity(country, name, capacity, minimumShouldMatch);
+        Sort sort = Sort.by(Sort.Direction.ASC, "capacity");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return localRepository.findByCountryAndNameOrMinimumCapacity(country, name, capacity, minimumShouldMatch, pageable);
     }
 
 
