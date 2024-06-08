@@ -3,11 +3,14 @@ package rs.ac.uns.acs.nais.ElasticSearchDatabaseService.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Local;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.impl.LocalService;
+import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.impl.PDFService;
 
 import java.util.List;
 
@@ -15,9 +18,11 @@ import java.util.List;
 @RequestMapping("/locals.json")
 public class LocalController {
     private final LocalService localService;
+    private final PDFService pdfService;
 
-    public LocalController(LocalService localService) {
+    public LocalController(LocalService localService,PDFService pdfService) {
         this.localService = localService;
+        this.pdfService = pdfService;
     }
 
     @PostMapping
@@ -56,6 +61,11 @@ public class LocalController {
         return localService.findByCountry(country, pageable);
     }
 
+    @GetMapping("/searchByCity")
+    public List<Local> getByCity(@RequestParam String city) {
+        return localService.findByCity(city);
+    }
+
     // ML #1
     @GetMapping("/searchByCountryAndCapacitySorted")
     public Page<Local> searchByCountryAndCapacitySorted(
@@ -85,10 +95,15 @@ public class LocalController {
     @GetMapping("/complex-search")
     public ResponseEntity<?> complexSearch(
             @RequestParam String country,
-            @RequestParam String name,
-            @RequestParam int capacity) {
+            @RequestParam(required = false) String name,
+            @RequestParam int capacity,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         try {
-            List<Local> results = localService.getLocalsByCriteria(country, name, capacity);
+            if (name == null) {
+                name = "";
+            }
+            List<Local> results = localService.getLocalsByCriteria(country, name, capacity, page,size);
             if (results.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No results found");
             }
@@ -97,5 +112,33 @@ public class LocalController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
+
+    @GetMapping("/city-sorted-by-average-price")
+    public ResponseEntity<?> getLocalsInCitySortedByAverageItemPrice(@RequestParam String city) {
+        try {
+            List<Local> results = localService.getLocalsInCitySortedByAverageItemPrice(city);
+            if (results.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No results found");
+            }
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/city/{city}/pdf")
+    public ResponseEntity<byte[]> getLocalsPDF(@PathVariable String city) {
+        try {
+            byte[] pdfContent = pdfService.generatePDFForCity(city);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            String filename = "locals_" + city + ".pdf";
+            headers.setContentDispositionFormData("attachment", filename);
+            return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
 }

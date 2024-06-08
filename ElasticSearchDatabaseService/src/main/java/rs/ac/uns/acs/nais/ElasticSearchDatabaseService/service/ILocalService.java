@@ -17,5 +17,5 @@ public interface ILocalService {
     List<Local> searchByTextAndCity(String text, String city);
 
     // ML #3
-    List<Local> getLocalsByCriteria(String country, String name, int capacity);
+    List<Local> getLocalsByCriteria(String country, String name, int capacity, int page, int size);
 }

@@ -37,6 +37,18 @@ public class LocalService implements ILocalService {
         localRepository.deleteById(id);
     }
 
+    public Page<Local> getAllLocals(Pageable pageable) {
+        return localRepository.findAllLocals(pageable);
+    }
+
+    public Page<Local> findByCountry(String country, Pageable pageable) {
+        return localRepository.findByCountry(country,pageable);
+    }
+
+    public List<Local> findByCity(String city){
+        return localRepository.findByCity(city);
+    }
+
     // ML #1
     public Page<Local> getLocalsByCountryAndCapacitySorted(String country, int minCapacity, int maxCapacity, int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "capacity");
@@ -51,19 +63,19 @@ public class LocalService implements ILocalService {
 
 
     // ML #3
-    public List<Local> getLocalsByCriteria(String country, String name, int capacity) {
-        return localRepository.findByCountryAndNameOrMinimumCapacity(country, name, capacity);
+    public List<Local> getLocalsByCriteria(String country, String name, int capacity, int page, int size) {
+        int minimumShouldMatch = (name == null || name.isEmpty()) ? 0 : 1;
+        Sort sort = Sort.by(Sort.Direction.ASC, "capacity");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return localRepository.findByCountryAndNameOrMinimumCapacity(country, name, capacity, minimumShouldMatch, pageable);
     }
 
 
-    // ML #PROBA
-    public Page<Local> getAllLocals(Pageable pageable) {
-        return localRepository.findAllLocals(pageable);
-    }//WELL
+    public List<Local> getLocalsInCitySortedByAverageItemPrice(String city) {
+        return localRepository.findLocalsInCitySortedByAverageItemPrice(city);
+    }
 
-    public Page<Local> findByCountry(String country, Pageable pageable) {
-        return localRepository.findByCountry(country,pageable);
-    }//WELL
+
 
 
 
