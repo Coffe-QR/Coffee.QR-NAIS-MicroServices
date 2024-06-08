@@ -5,8 +5,10 @@ import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Item;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.ItemRepository;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.IItemService;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService implements IItemService {
@@ -37,7 +39,13 @@ public class ItemService implements IItemService {
         return itemRepository.getAllItemsForLocalId(id);
     }
 
-    public List<Item> findFoodsByDescription(String description) {
-        return itemRepository.findFoodsByDescriptionOrderByPriceAsc(description);
+    public List<Item> findFoodsByDescription(String localId, String description) {
+        // Fetch items from the repository
+        List<Item> items = itemRepository.findFoodsByDescription(localId, description);
+
+        // Sort the list by price in ascending order using Stream API
+        return items.stream()
+                .sorted(Comparator.comparingDouble(Item::getPrice))
+                .collect(Collectors.toList());
     }
 }

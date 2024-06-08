@@ -48,8 +48,8 @@ public class ItemController {
     }
 
     @GetMapping("/search/food")
-    public List<Item> searchFoodsByDescription(@RequestParam String description) {
-        return itemService.findFoodsByDescription(description);
+    public List<Item> searchFoodsByDescription(@RequestParam String description,@RequestParam String localId) {
+        return itemService.findFoodsByDescription(localId,description);
     }
 
 }
