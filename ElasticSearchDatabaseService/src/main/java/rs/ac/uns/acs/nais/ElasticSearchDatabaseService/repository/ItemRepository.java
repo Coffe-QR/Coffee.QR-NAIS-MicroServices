@@ -12,4 +12,7 @@ public interface ItemRepository extends ElasticsearchRepository<Item, String> {
     List<Item> findByNameOrDescription(String name, String description);
     @Query("{\"bool\": {\"must\": {\"match\": {\"localId\": \"?0\"}}}}")
     List<Item> getAllItemsForLocalId(String localId);
+
+    @Query("{\"bool\": {\"must\": [{\"term\": {\"type\": \"FOOD\"}}, {\"match_phrase\": {\"description\": \"?0\"}}]}, \"sort\": [{\"price\": {\"order\": \"asc\"}}]}")
+    List<Item> findFoodsByDescriptionOrderByPriceAsc(String description);
 }

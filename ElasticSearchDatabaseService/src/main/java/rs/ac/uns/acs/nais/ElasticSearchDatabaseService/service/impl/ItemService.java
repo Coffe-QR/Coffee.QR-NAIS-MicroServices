@@ -33,7 +33,11 @@ public class ItemService implements IItemService {
         itemRepository.deleteById(id);
     }
 
-//    public List<Item> getAllItemsForLocalId(String id) {
-//        return itemRepository.getAllItemsForLocalId(id);
-//    }
+    public List<Item> getAllItemsForLocalId(String id) {
+        return itemRepository.getAllItemsForLocalId(id);
+    }
+
+    public List<Item> findFoodsByDescription(String description) {
+        return itemRepository.findFoodsByDescriptionOrderByPriceAsc(description);
+    }
 }

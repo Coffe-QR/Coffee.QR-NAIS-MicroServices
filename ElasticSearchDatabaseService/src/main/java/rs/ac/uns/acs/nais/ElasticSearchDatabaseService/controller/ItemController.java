@@ -46,4 +46,10 @@ public class ItemController {
     public void deleteItem(@PathVariable String id) {
         itemService.deleteItem(id);
     }
+
+    @GetMapping("/search/food")
+    public List<Item> searchFoodsByDescription(@RequestParam String description) {
+        return itemService.findFoodsByDescription(description);
+    }
+
 }
