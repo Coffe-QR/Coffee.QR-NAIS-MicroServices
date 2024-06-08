@@ -36,4 +36,8 @@ public class ItemService implements IItemService {
     public List<Item> getAllItemsForLocalId(String id) {
         return itemRepository.getAllItemsForLocalId(id);
     }
+
+    public List<Item> findFoodsByDescription(String description) {
+        return itemRepository.findFoodsByDescriptionOrderByPriceAsc(description);
+    }
 }
