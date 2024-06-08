@@ -8,7 +8,7 @@ import rs.ac.uns.acs.nais.GraphDatabaseService.service.IItemService;
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
 public class ItemService implements IItemService {
     private final ItemRepository itemRepository;
 

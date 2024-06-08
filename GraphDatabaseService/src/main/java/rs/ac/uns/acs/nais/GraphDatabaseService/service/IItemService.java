@@ -7,7 +7,6 @@ import rs.ac.uns.acs.nais.GraphDatabaseService.repository.ItemRepository;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 public interface IItemService {
 
     public void save(Item item);

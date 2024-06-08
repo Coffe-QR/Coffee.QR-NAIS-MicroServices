@@ -3,13 +3,14 @@ package rs.ac.uns.acs.nais.GraphDatabaseService.controller;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.acs.nais.GraphDatabaseService.model.Table;
 import rs.ac.uns.acs.nais.GraphDatabaseService.service.ITableService;
+import rs.ac.uns.acs.nais.GraphDatabaseService.service.impl.TableService;
 
 @RestController
 @RequestMapping("/tables.json")
 public class TableController {
-    private final ITableService tableService;
+    private final TableService tableService;
 
-    public TableController(ITableService tableService) {
+    public TableController(TableService tableService) {
         this.tableService = tableService;
     }
 

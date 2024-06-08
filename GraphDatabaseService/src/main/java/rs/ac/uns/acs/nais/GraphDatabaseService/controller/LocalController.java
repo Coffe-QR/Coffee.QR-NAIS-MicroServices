@@ -13,8 +13,8 @@ import java.util.List;
 @RequestMapping("/locals.json")
 public class LocalController {
 
-    private final ILocalService localService;
-    public LocalController(ILocalService localService) {
+    private final LocalService localService;
+    public LocalController(LocalService localService) {
         this.localService = localService;
     }
     @PostMapping

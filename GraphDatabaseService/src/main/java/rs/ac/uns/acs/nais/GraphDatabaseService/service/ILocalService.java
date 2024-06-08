@@ -5,7 +5,6 @@ import rs.ac.uns.acs.nais.GraphDatabaseService.model.Local;
 
 import java.util.List;
 
-@Service
 public interface ILocalService {
 
     public void save(Local local);

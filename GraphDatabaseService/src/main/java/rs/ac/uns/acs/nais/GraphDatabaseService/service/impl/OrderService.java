@@ -1,11 +1,13 @@
 package rs.ac.uns.acs.nais.GraphDatabaseService.service.impl;
 
+import org.springframework.stereotype.Service;
 import rs.ac.uns.acs.nais.GraphDatabaseService.model.Order;
 import rs.ac.uns.acs.nais.GraphDatabaseService.repository.OrderRepository;
 import rs.ac.uns.acs.nais.GraphDatabaseService.service.IOrderService;
 
 import java.util.List;
 
+@Service
 public class OrderService implements IOrderService {
     private final OrderRepository itemRepository;
 

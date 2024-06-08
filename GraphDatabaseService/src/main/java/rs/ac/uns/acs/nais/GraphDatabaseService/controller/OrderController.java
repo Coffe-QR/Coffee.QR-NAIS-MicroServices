@@ -10,9 +10,9 @@ import rs.ac.uns.acs.nais.GraphDatabaseService.service.impl.OrderService;
 @RestController
 @RequestMapping("/orders.json")
 public class OrderController {
-    private final IOrderService orderService;
+    private final OrderService orderService;
 
-    public OrderController(IOrderService orderService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 

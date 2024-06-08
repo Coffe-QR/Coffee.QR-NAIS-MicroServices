@@ -4,6 +4,7 @@ package rs.ac.uns.acs.nais.GraphDatabaseService.controller;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.acs.nais.GraphDatabaseService.model.Item;
 import rs.ac.uns.acs.nais.GraphDatabaseService.service.IItemService;
+import rs.ac.uns.acs.nais.GraphDatabaseService.service.impl.ItemService;
 
 import java.util.List;
 
@@ -11,9 +12,9 @@ import java.util.List;
 @RequestMapping("/items.json")
 public class ItemController {
 
-    private final IItemService itemService;
+    private final ItemService itemService;
 
-    public ItemController(IItemService itemService) {
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 

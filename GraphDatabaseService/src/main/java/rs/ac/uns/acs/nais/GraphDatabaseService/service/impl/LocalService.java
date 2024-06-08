@@ -1,11 +1,13 @@
 package rs.ac.uns.acs.nais.GraphDatabaseService.service.impl;
 
+import org.springframework.stereotype.Service;
 import rs.ac.uns.acs.nais.GraphDatabaseService.model.Local;
 import rs.ac.uns.acs.nais.GraphDatabaseService.repository.LocalRepository;
 import rs.ac.uns.acs.nais.GraphDatabaseService.service.ILocalService;
 
 import java.util.List;
 
+@Service
 public class LocalService implements ILocalService {
     private final LocalRepository itemRepository;
 

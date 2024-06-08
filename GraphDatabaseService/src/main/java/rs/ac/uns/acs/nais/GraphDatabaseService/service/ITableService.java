@@ -5,7 +5,6 @@ import rs.ac.uns.acs.nais.GraphDatabaseService.model.Table;
 
 import java.util.List;
 
-@Service
 public interface ITableService {
 
     public void save(Table table);

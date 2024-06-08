@@ -5,7 +5,6 @@ import rs.ac.uns.acs.nais.GraphDatabaseService.model.Order;
 
 import java.util.List;
 
-@Service
 public interface IOrderService {
 
     public void save(Order order);
