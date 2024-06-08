@@ -8,8 +8,7 @@ public class Item {
 
     public enum ItemType {
         FOOD,
-        DRINK,
-        INGREDIENT
+        DRINK
     }
 
     @Id
