@@ -6,6 +6,7 @@ import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.LocalRepositor
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.ILocalService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LocalService implements ILocalService {
@@ -18,5 +19,17 @@ public class LocalService implements ILocalService {
 
     public List<Local> findByNameOrDescription(String name, String description) {
         return localRepository.findByNameOrDescription(name, description);
+    }
+
+    public Iterable<Local> findAllLocals() {
+        return localRepository.findAll();
+    }
+
+    public Optional<Local> findLocalById(String id) {
+        return localRepository.findById(id);
+    }
+
+    public void deleteLocal(String id) {
+        localRepository.deleteById(id);
     }
 }

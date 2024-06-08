@@ -11,9 +11,9 @@ public class Local {
     private String description;
     private String city;
     private String country;
-    private double capacity;
+    private int capacity;
 
-    public Local(String id, String name, String description, String city, String country, double capacity){
+    public Local(String id, String name, String description, String city, String country, int capacity){
         this.id = id;
         this.name = name;
         this.description = description;
@@ -65,11 +65,11 @@ public class Local {
         this.country = country;
     }
 
-    public double getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(double capacity) {
+    public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 }

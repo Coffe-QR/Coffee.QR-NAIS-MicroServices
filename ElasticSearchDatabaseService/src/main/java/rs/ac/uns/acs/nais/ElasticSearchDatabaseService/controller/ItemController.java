@@ -27,8 +27,18 @@ public class ItemController {
         return itemService.findByNameOrDescription(name, description);
     }
 
-    @GetMapping("findML")
-    public String findML() {
-        return "MLMLML";
+    @GetMapping
+    public Iterable<Item> getAllItems() {
+        return itemService.findAllItems();
+    }
+
+    @GetMapping("/{id}")
+    public Item getItemById(@PathVariable String id) {
+        return itemService.findItemById(id).orElse(null);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteItem(@PathVariable String id) {
+        itemService.deleteItem(id);
     }
 }

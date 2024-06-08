@@ -25,4 +25,20 @@ public class LocalController {
                                               @RequestParam(value = "description") String description) {
         return localService.findByNameOrDescription(name, description);
     }
+
+    @GetMapping
+    public Iterable<Local> getAllLocals() {
+        return localService.findAllLocals();
+    }
+
+    @GetMapping("/{id}")
+    public Local getLocalById(@PathVariable String id) {
+        return localService.findLocalById(id).orElse(null);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteLocal(@PathVariable String id) {
+        localService.deleteLocal(id);
+    }
+
 }
