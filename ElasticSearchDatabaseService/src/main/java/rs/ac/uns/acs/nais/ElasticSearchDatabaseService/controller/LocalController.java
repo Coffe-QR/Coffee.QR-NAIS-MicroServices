@@ -46,6 +46,15 @@ public class LocalController {
         localService.deleteLocal(id);
     }
 
+    @GetMapping("/all")
+    public Page<Local> getAllLocals(Pageable pageable) {
+        return localService.getAllLocals(pageable);
+    }
+
+    @GetMapping("/searchByCountry")
+    public Page<Local> getByCountry(@RequestParam String country, Pageable pageable) {
+        return localService.findByCountry(country, pageable);
+    }
 
     // ML #1
     @GetMapping("/searchByCountryAndCapacitySorted")
@@ -59,17 +68,6 @@ public class LocalController {
     }
 
     // ML #2
-//    @GetMapping("/full-text-search")
-//    public List<Local> performFullTextSearch(@RequestParam String text, @RequestParam String city, Pageable pageable) {
-//        return localService.searchByTextAndCity(text, city, pageable);
-//    }
-
-//    @GetMapping("/full-text-search")
-//    public List<Local> performFullTextSearch(@RequestParam String text, @RequestParam String city) {
-//        Pageable pageable = PageRequest.of(0, 10); // Example fixed pageable
-//        return localService.searchByTextAndCity(text, city, pageable);
-//    }
-
     @GetMapping("/full-text-search")
     public ResponseEntity<?> performFullTextSearch(@RequestParam String text, @RequestParam String city) {
         try {
@@ -83,30 +81,21 @@ public class LocalController {
         }
     }
 
-
-
     // ML #3
     @GetMapping("/complex-search")
-    public List<Local> complexSearch(
+    public ResponseEntity<?> complexSearch(
             @RequestParam String country,
             @RequestParam String name,
-            @RequestParam int capacity,
-            Pageable pageable) {
-        return localService.getLocalsByCriteria(country, name, capacity, pageable);
+            @RequestParam int capacity) {
+        try {
+            List<Local> results = localService.getLocalsByCriteria(country, name, capacity);
+            if (results.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No results found");
+            }
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
     }
-
-    // ML #PROBA
-    @GetMapping("/all")
-    public Page<Local> getAllLocals(Pageable pageable) {
-        return localService.getAllLocals(pageable);
-    }
-
-    @GetMapping("/searchByCountry")
-    public Page<Local> getByCountry(@RequestParam String country, Pageable pageable) {
-        return localService.findByCountry(country, pageable);
-    }
-
-
-
 
 }

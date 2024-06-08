@@ -13,34 +13,49 @@ import java.util.List;
 public interface LocalRepository extends ElasticsearchRepository<Local, String> {
     List<Local> findByNameOrDescription(String name, String description);
 
-    //ML #1
-    // This query can fetch locals by a range of capacities,
-    // filter them by a specific country, and then sort them by capacity in descending order:
-    @Query("{\"bool\": {\"must\": [{\"term\": {\"country\": \"?0\"}}, {\"range\": {\"capacity\": {\"gte\": ?1, \"lte\": ?2}}}]}}")
-    Page<Local> findByCountryAndCapacityRangeSorted(String country, int minCapacity, int maxCapacity, Pageable pageable);
-
-
-    //ML #2
-    // This query performs a full-text search on the description and name fields,
-    // filters by city, and aggregates the results based on country:
-    @Query("{\"bool\": {\"must\": [{\"multi_match\": {\"query\": \"?0\", \"fields\": [\"name\", \"description\"]}}, {\"term\": {\"city\": \"?1\"}}]}}")
-    List<Local> findByTextAndCity(String text, String city);
-
-
-
-    //ML #3
-    //This complex query combines multiple conditions (AND, OR)
-    // on various fields such as name, country, and capacity:
-
-    @Query("{\"bool\": {\"must\": [{\"term\": {\"country\": ?0}}, {\"range\": {\"capacity\": {\"gte\": ?2}}}], \"should\": [{\"match\": {\"name\": ?1}}], \"minimum_should_match\": 1}}")
-    List<Local> findByCountryAndNameOrMinimumCapacity(String country, String name, int capacity, Pageable pageable);
-
-    //ML #PROBA
     @Query("{\"match_all\": {}}")
     Page<Local> findAllLocals(Pageable pageable);
 
     @Query("{\"bool\": {\"must\": {\"term\": {\"country\": \"?0\"}}}}")
     Page<Local> findByCountry(String country, Pageable pageable);
 
+    /**
+     * Pronalazi lokale koji se nalaze u određenoj zemlji i imaju kapacitet u zadanom opsegu (između minCapacity i maxCapacity).
+     * Rezultati su sortirani u opadajucem redosledu kapaciteta(implementirano u servisu).
+     *
+     * @param country     naziv zemlje
+     * @param minCapacity minimalni kapacitet
+     * @param maxCapacity maksimalni kapacitet
+     * @param pageable    informacije o straničenju i sortiranju
+     * @return stranica lokalnih objekata koji ispunjavaju uslove pretrage
+     */
+    @Query("{\"bool\": {\"must\": [{\"term\": {\"country\": \"?0\"}}, {\"range\": {\"capacity\": {\"gte\": ?1, \"lte\": ?2}}}]}}")
+    Page<Local> findByCountryAndCapacityRangeSorted(String country, int minCapacity, int maxCapacity, Pageable pageable);
+
+
+    /**
+     * Pronalazi lokale gde se zadati tekst pojavljuje u poljima "name" ili "description" i koji se nalaze u određenom gradu.
+     * Upit mora ispuniti oba uslova - tekstualno podudaranje i grad.
+     *
+     * @param text tekst koji se pretražuje u poljima "name" i "description"
+     * @param city naziv grada
+     * @return lista lokalnih objekata koji ispunjavaju uslove pretrage
+     */
+    @Query("{\"bool\": {\"must\": [{\"multi_match\": {\"query\": \"?0\", \"fields\": [\"name\", \"description\"]}}, {\"term\": {\"city\": \"?1\"}}]}}")
+    List<Local> findByTextAndCity(String text, String city);
+
+
+    /**
+     * Pronalazi lokale koji se nalaze u određenoj zemlji, imaju kapacitet veći ili jednak zadatom,
+     * i gde se naziv lokala podudara sa zadatim tekstom. Upit mora ispuniti uslove za zemlju i kapacitet,
+     * dok je uslov za naziv opcionalan ali povećava relevantnost rezultata.
+     *
+     * @param country  naziv zemlje
+     * @param name     naziv lokala
+     * @param capacity minimalni kapacitet
+     * @return lista lokalnih objekata koji ispunjavaju uslove pretrage
+     */
+    @Query("{\"bool\": {\"must\": [{\"term\": {\"country\": \"?0\"}}, {\"range\": {\"capacity\": {\"gte\": ?2}}}], \"should\": [{\"match\": {\"name\": \"?1\"}}], \"minimum_should_match\": 1}}")
+    List<Local> findByCountryAndNameOrMinimumCapacity(String country, String name, int capacity);
 
 }

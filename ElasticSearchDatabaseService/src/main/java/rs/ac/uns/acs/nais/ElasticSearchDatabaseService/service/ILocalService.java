@@ -13,9 +13,9 @@ public interface ILocalService {
     Page<Local> getLocalsByCountryAndCapacitySorted(String country, int minCapacity, int maxCapacity, int page, int size);
 
     // ML #2
-    //List<Local> searchByTextAndCity(String text, String city, Pageable pageable);
+
     List<Local> searchByTextAndCity(String text, String city);
 
     // ML #3
-    List<Local> getLocalsByCriteria(String country, String name, int capacity, Pageable pageable);
+    List<Local> getLocalsByCriteria(String country, String name, int capacity);
 }

@@ -45,19 +45,16 @@ public class LocalService implements ILocalService {
     }
 
     // ML #2
-//    public List<Local> searchByTextAndCity(String text, String city, Pageable pageable) {
-//        return localRepository.findByTextAndCity(text, city, pageable);
-//    }
-
     public List<Local> searchByTextAndCity(String text, String city) {
         return localRepository.findByTextAndCity(text, city);
     }
 
 
     // ML #3
-    public List<Local> getLocalsByCriteria(String country, String name, int capacity, Pageable pageable) {
-        return localRepository.findByCountryAndNameOrMinimumCapacity(country, name, capacity, pageable);
+    public List<Local> getLocalsByCriteria(String country, String name, int capacity) {
+        return localRepository.findByCountryAndNameOrMinimumCapacity(country, name, capacity);
     }
+
 
     // ML #PROBA
     public Page<Local> getAllLocals(Pageable pageable) {
