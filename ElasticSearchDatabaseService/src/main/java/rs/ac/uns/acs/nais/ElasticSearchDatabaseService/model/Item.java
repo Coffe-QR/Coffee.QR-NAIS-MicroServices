@@ -19,14 +19,16 @@ public class Item {
     private String description;
     private double price;
     private String picture;
+    private String localId;
 
-    public Item(String id,ItemType type, String name, String description, double price, String picture) {
+    public Item(String id,ItemType type, String name, String description, double price, String picture,String localId) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.description = description;
         this.price = price;
         this.picture = picture;
+        this.localId = localId;
     }
 
     public Item() {
@@ -78,5 +80,13 @@ public class Item {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public String getLocalId() {
+        return localId;
+    }
+
+    public void setLocalId(String localId) {
+        this.localId = localId;
     }
 }
