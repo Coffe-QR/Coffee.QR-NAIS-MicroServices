@@ -17,10 +17,10 @@ spring:
           lower-case-service-id: true
       routes:
 
-#        - id: graph-database-service
-#          uri: http://graph-database-service
-#          predicates:
-#            - Path=/graph-database-service/**
+        - id: graph-database-service
+          uri: http://graph-database-service
+          predicates:
+            - Path=/graph-database-service/**
         - id: elasticsearch-database-service
           uri: http://elasticsearch-database-service
           predicates:
