@@ -31,6 +31,9 @@ public class ItemService implements IItemService {
     }
 
     public void deleteItem(String id) {
+        //TESTIRANJE SAGE
+        save(new Item("UNIQUE", Item.ItemType.FOOD,"SAGA TEST","RANDOM",6.9,"RANDOMIMG","UNIQUELOCALID"));
+        //--------------
         itemRepository.deleteById(id);
     }
 

@@ -15,7 +15,17 @@ public class ItemService implements IItemService {
     public ItemService(ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
     }
+
+    public class DescriptionTooLongException extends RuntimeException {
+        public DescriptionTooLongException(String message) {
+            super(message);
+        }
+    }
+
     public Item save(Item item) {
+        if (item.getDescription() != null && item.getDescription().length() > 50) {
+            throw new DescriptionTooLongException("Description cannot be more than 50 characters");
+        }
         return itemRepository.save(item);
     }
 

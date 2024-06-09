@@ -25,7 +25,7 @@ public class SagaController {
     @PostMapping("/addItem")
     public Mono<ResponseEntity<?>> addItem(@RequestBody Item data) {
         return elasticSearchService.addItem(data)
-                .flatMap(result -> graphService.addItem(result)//TREBA RESPONSE NEKAKO DA SE DOBAVI
+                .flatMap(result -> graphService.addItem(result)
                 .map(result1 -> ResponseEntity.ok().body(result))
                 .onErrorResume(error -> elasticSearchService.compensateAddItem(result.getId())
                         .then(Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()))));
