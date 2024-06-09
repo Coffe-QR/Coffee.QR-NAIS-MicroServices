@@ -57,8 +57,8 @@ public class ItemController {
     }
 
     @GetMapping("/search/food")
-    public List<Item> searchFoodsByDescription(@RequestParam String description,@RequestParam String localId) {
-        return itemService.findFoodsByDescription(localId,description);
+    public ResponseEntity<List<Item>> searchFoodsByDescription(@RequestParam String description,@RequestParam String localId) {
+        return ResponseEntity.ok(itemService.findFoodsByDescription(localId,description));
     }
 
     @GetMapping("/searchByPriceBetween")
@@ -86,8 +86,8 @@ public class ItemController {
     }
 
     @GetMapping("/search/cheapFood")
-    public List<Item> searchCheapFood(@RequestParam String localId) {
-        return itemService.searchCheapFood(localId);
+    public ResponseEntity<List<Item>> searchCheapFood(@RequestParam String localId) {
+        return ResponseEntity.ok(itemService.searchCheapFood(localId));
     }
 
 }
