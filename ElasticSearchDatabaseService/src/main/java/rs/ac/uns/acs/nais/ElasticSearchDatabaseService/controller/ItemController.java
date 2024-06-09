@@ -57,4 +57,9 @@ public class ItemController {
         return itemService.findAvgPriceOfDrinksByLocalId(localId);
     }
 
+    @GetMapping("/search/cheapFood")
+    public List<Item> searchCheapFood(@RequestParam String localId) {
+        return itemService.searchCheapFood(localId);
+    }
+
 }

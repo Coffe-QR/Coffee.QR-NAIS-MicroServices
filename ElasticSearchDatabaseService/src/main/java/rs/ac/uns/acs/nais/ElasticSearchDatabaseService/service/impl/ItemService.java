@@ -5,6 +5,7 @@ import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Item;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.ItemRepository;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.IItemService;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +59,21 @@ public class ItemService implements IItemService {
                 .mapToDouble(Item::getPrice)
                 .sum();
         return priceSum / items.size();
+    }
+
+    public List<Item> searchCheapFood(String localId)
+    {
+        List<Item> items = itemRepository.findAllFoodsByLocalId(localId);
+        if (items == null || items.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        double priceSum = items.stream()
+                .mapToDouble(Item::getPrice)
+                .sum();
+        double avgPrice = priceSum / items.size();
+
+        return itemRepository.findAllFoodsByLocalIdAndLowerPriceThanAvg(localId,avgPrice);
     }
 
 }
