@@ -41,4 +41,7 @@ public interface ItemRepository extends ElasticsearchRepository<Item, String> {
             "{\"range\": {\"price\": {\"lt\": \"?1\"}}}" +
             "]}}")
     List<Item> findAllFoodsByLocalIdAndLowerPriceThanAvg(String localId,double price);
+
+    @Query("{\"match\": {\"description\": {\"query\": \"?0\", \"operator\": \"and\"}}}")
+    List<Item> findByDescriptionContaining(String description);
 }

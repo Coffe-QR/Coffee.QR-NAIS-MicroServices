@@ -99,6 +99,6 @@ public interface LocalRepository extends ElasticsearchRepository<Local, String> 
             + "}")
     List<Local> findLocalsInCitySortedByAverageItemPrice(String city);
 
-
+    List<Local> findByIdIn(List<String> ids);
 
 }

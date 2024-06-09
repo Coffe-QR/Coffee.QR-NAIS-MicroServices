@@ -72,6 +72,12 @@ public class LocalController {
         return localService.findByCapacityBetween(minCapacity,maxCapacity);
     }
 
+    @GetMapping("/search-by-item-description")
+    public ResponseEntity<List<Local>> getLocalsByItemDescription(@RequestParam String description) {
+        List<Local> locals = localService.findLocalsByItemDescription(description);
+        return ResponseEntity.ok(locals);
+    }
+
     // ML #1
     @GetMapping("/searchByCountryAndCapacitySorted")
     public Page<Local> searchByCountryAndCapacitySorted(
@@ -132,20 +138,6 @@ public class LocalController {
         }
     }
 
-//    @GetMapping("/city/{city}/pdf")
-//    public ResponseEntity<byte[]> getLocalsPDF(@PathVariable String city) {
-//        try {
-//            byte[] pdfContent = pdfService.generatePDFForCity(city);
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.APPLICATION_PDF);
-//            String filename = "locals_" + city + ".pdf";
-//            headers.setContentDispositionFormData("attachment", filename);
-//            return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
-
     @GetMapping("/pdf/by-capacity")
     public ResponseEntity<byte[]> getPDFByCapacityRange(@RequestParam int minCapacity, @RequestParam int maxCapacity) {
         try {
@@ -153,6 +145,21 @@ public class LocalController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             String filename = "locals_capacity_range_" + minCapacity + "_to_" + maxCapacity + ".pdf";
+            headers.setContentDispositionFormData("attachment", filename);
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/pdf/by-item-description")
+    public ResponseEntity<byte[]> getPDFByItemDescription(@RequestParam String desc) {
+        try {
+            byte[] pdfContent = pdfService.generatePDFBasedOnItemDescription(desc);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            String filename = "locals_which_have_items_with_desc_" + desc + ".pdf";
             headers.setContentDispositionFormData("attachment", filename);
             headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
             return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);

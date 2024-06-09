@@ -5,19 +5,25 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Item;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Local;
+import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.ItemRepository;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.LocalRepository;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.ILocalService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LocalService implements ILocalService {
     private final LocalRepository localRepository;
 
-    public LocalService(LocalRepository localRepository) {
+    private final ItemRepository itemRepository;
+
+    public LocalService(LocalRepository localRepository,ItemRepository itemRepository) {
         this.localRepository = localRepository;
+        this.itemRepository = itemRepository;
     }
     public void save(Local local) {localRepository.save(local);}
 
@@ -82,6 +88,18 @@ public class LocalService implements ILocalService {
 
     public List<Local> getLocalsInCitySortedByAverageItemPrice(String city) {
         return localRepository.findLocalsInCitySortedByAverageItemPrice(city);
+    }
+
+    public List<Local> findLocalsByItemDescription(String description) {
+        // Fetch items that contain the description
+        List<String> localIds = itemRepository.findByDescriptionContaining(description)
+                .stream()
+                .map(Item::getLocalId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // Fetch locals with those IDs
+        return localRepository.findByIdIn(localIds);
     }
 
 
