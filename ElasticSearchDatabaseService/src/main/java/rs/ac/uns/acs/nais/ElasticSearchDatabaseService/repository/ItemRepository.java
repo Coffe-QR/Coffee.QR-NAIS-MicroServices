@@ -20,5 +20,9 @@ public interface ItemRepository extends ElasticsearchRepository<Item, String> {
             "]}}")
     List<Item> findFoodsByDescription(String localId, String description);
 
-
+    @Query("{\"bool\": {\"must\": [" +
+            "{\"match\": {\"localId\": \"?0\"}}," +
+            "{\"match\": {\"type\": \"DRINK\"}}" +
+            "]}}")
+    List<Item> findAllDrinksByLocalId(String localId);
 }

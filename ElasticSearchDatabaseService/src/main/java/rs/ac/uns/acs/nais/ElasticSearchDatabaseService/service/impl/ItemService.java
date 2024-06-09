@@ -40,12 +40,24 @@ public class ItemService implements IItemService {
     }
 
     public List<Item> findFoodsByDescription(String localId, String description) {
-        // Fetch items from the repository
         List<Item> items = itemRepository.findFoodsByDescription(localId, description);
 
-        // Sort the list by price in ascending order using Stream API
         return items.stream()
                 .sorted(Comparator.comparingDouble(Item::getPrice))
                 .collect(Collectors.toList());
     }
+
+    public double findAvgPriceOfDrinksByLocalId(String localId) {
+        List<Item> items = itemRepository.findAllDrinksByLocalId(localId);
+
+        if (items == null || items.isEmpty()) {
+            return 0.0;
+        }
+
+        double priceSum = items.stream()
+                .mapToDouble(Item::getPrice)
+                .sum();
+        return priceSum / items.size();
+    }
+
 }
