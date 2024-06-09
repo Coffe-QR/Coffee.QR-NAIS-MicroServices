@@ -79,6 +79,7 @@ public class ItemController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
     @GetMapping("/findPriceOfCheapestVisit")
     public double findPriceOfCheapestVisit(@RequestParam String localId) {
         return itemService.findPriceOfCheapestVisit(localId);
