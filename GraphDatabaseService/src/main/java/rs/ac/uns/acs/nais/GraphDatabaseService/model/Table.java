@@ -15,8 +15,8 @@ public class Table {
     private long localId;
     private Local place;
 
-    @Relationship(value = "IN_LOCAL", direction = Relationship.Direction.OUTGOING)
-    private List<Table> tables = new ArrayList<>();
+    @Relationship(value = "ON_TABLE", direction = Relationship.Direction.OUTGOING)
+    private List<Order> orders = new ArrayList<>();
 
     // Constructor
     public Table(String name, long capacity, boolean isSmokingArea, long localId) {

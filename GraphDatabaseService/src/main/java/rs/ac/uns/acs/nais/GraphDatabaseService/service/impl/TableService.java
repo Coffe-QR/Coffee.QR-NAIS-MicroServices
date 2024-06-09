@@ -9,23 +9,30 @@ import java.util.List;
 
 @Service
 public class TableService implements ITableService {
-    private final TableRepository itemRepository;
+    private final TableRepository tableRepository;
 
-    public TableService(TableRepository itemRepository) {
-        this.itemRepository = itemRepository;
+    public TableService(TableRepository tableRepository) {
+        this.tableRepository = tableRepository;
     }
-    public void save(Table item) {itemRepository.save(item);}
+    public void save(Table table) {tableRepository.save(table);}
 
     public List<Table> findAllTables() {
-        return itemRepository.findAll();
+        return tableRepository.findAll();
     }
 
     public Table findTableById(String id) {
-        return itemRepository.findById(id).get();
+        return tableRepository.findById(id).get();
     }
 
     public void deleteTable(String id) {
-        itemRepository.deleteById(id);
+        tableRepository.deleteById(id);
     }
 
+    public Long countOrdersForNonSmokingTables(String localId) {
+        return tableRepository.countOrdersForNonSmokingTables(localId);
+    }
+
+    public Table deleteTableWithLeastOrders(String localId) {
+        return tableRepository.deleteTableWithLeastOrders(localId);
+    }
 }

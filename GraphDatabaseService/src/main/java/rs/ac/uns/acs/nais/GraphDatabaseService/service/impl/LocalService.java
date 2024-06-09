@@ -9,23 +9,34 @@ import java.util.List;
 
 @Service
 public class LocalService implements ILocalService {
-    private final LocalRepository itemRepository;
+    private final LocalRepository localRepository;
 
-    public LocalService(LocalRepository itemRepository) {
-        this.itemRepository = itemRepository;
+    public LocalService(LocalRepository localRepository) {
+        this.localRepository = localRepository;
     }
-    public void save(Local item) {itemRepository.save(item);}
+    public void save(Local item) {localRepository.save(item);}
 
     public List<Local> findAllLocals() {
-        return itemRepository.findAll();
+        return localRepository.findAll();
     }
 
     public Local findLocalById(String id) {
-        return itemRepository.findById(id).get();
+        return localRepository.findById(id).get();
     }
 
     public void deleteLocal(String id) {
-        itemRepository.deleteById(id);
+        localRepository.deleteById(id);
+    }
+
+    public int getTotalFoodQuantityForSmokingTables() {
+        return localRepository.getTotalFoodQuantityForSmokingTables();
+    }
+
+    public Double getAverageItemPrice(String localId) {
+        return localRepository.findAverageItemPriceByLocalId(localId);
+    }
+    public Double getAnnualEarnings(String localId, int year) {
+        return localRepository.findAnnualEarningsByLocalIdAndYear(localId, year);
     }
 
 }

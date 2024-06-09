@@ -15,8 +15,8 @@ public class Local {
     private LocalDate dateOfStartingPartnership;
     private boolean isActive;
 
-    @Relationship(value = "IN_TABLE", direction = Relationship.Direction.OUTGOING)
-    private List<Order> orders = new ArrayList<>();
+    @Relationship(value = "IN_LOCAL", direction = Relationship.Direction.OUTGOING)
+    private List<Table> table = new ArrayList<>();
 
 
     // Constructor

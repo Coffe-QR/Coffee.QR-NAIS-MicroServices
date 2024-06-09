@@ -2,11 +2,13 @@ package rs.ac.uns.acs.nais.GraphDatabaseService.controller;
 
 
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.acs.nais.GraphDatabaseService.dto.ItemCountPerOrder;
 import rs.ac.uns.acs.nais.GraphDatabaseService.model.Item;
 import rs.ac.uns.acs.nais.GraphDatabaseService.service.IItemService;
 import rs.ac.uns.acs.nais.GraphDatabaseService.service.impl.ItemService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/items.json")
@@ -34,14 +36,24 @@ public class ItemController {
         return itemService.findAllItems();
     }
 
-    @GetMapping("/{id}")
-    public Item getItemById(@PathVariable String id) {
-        return itemService.findItemById(id);
+    //BRAT MOJ RADI
+    @GetMapping("/local/{localId}/most-ordered-items")
+    public List<Item> getMostOrderedItemsInLocal(@PathVariable String localId) {
+        return itemService.findMostOrderedItemsInLocal(localId);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteItem(@PathVariable String id) {
-        itemService.deleteItem(id);
+    @GetMapping("/not-ordered-last-month")
+    public List<Item> getItemsNotOrderedInLastMonth() {
+        return itemService.getItemsNotOrderedInLastMonth();
     }
 
+    @DeleteMapping("/delete-least-orders")
+    public Item deleteItemWithLeastOrders(@RequestParam String localId) {
+        return itemService.deleteItemWithLeastOrders(localId);
+    }
+
+    @PostMapping("/increase-top-three-prices")
+    public List<Item> increasePriceOfTopThreeItems(@RequestParam String localId, @RequestParam double increaseFactor) {
+        return itemService.increasePriceOfTopThreeItems(localId, increaseFactor);
+    }
 }

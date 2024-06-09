@@ -36,4 +36,19 @@ public class LocalController {
     public void deleteLocal(@PathVariable String id) {
         localService.deleteLocal(id);
     }
+
+    @GetMapping("/total-food-quantity-smoking-tables")
+    public int getTotalFoodQuantityForSmokingTables() {
+        return localService.getTotalFoodQuantityForSmokingTables();
+    }
+
+    @GetMapping("/{localId}/averageItemPrice")
+    public Double getAverageItemPrice(@PathVariable String localId) {
+        return localService.getAverageItemPrice(localId);
+    }
+
+    @GetMapping("/{localId}/annualEarnings/{year}")
+    public Double getAnnualEarnings(@PathVariable String localId, @PathVariable int year) {
+        return localService.getAnnualEarnings(localId, year);
+    }
 }

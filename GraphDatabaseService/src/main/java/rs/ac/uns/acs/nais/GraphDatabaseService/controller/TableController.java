@@ -33,4 +33,15 @@ public class TableController {
     public void deleteTable(@PathVariable String id) {
         tableService.deleteTable(id);
     }
+
+    @GetMapping("/non-smoking-order-count/{localId}")
+    public Long countOrdersForNonSmokingTables(@PathVariable String localId) {
+        return tableService.countOrdersForNonSmokingTables(localId);
+    }
+
+    @DeleteMapping("/delete-least-orders")
+    public Table deleteTableWithLeastOrdersPost(@RequestParam String localId) {
+        return tableService.deleteTableWithLeastOrders(localId);
+    }
+
 }
