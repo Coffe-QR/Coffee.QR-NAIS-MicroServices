@@ -6,9 +6,7 @@ import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Local;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.ItemRepository;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.IItemService;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,10 +39,8 @@ public class ItemService implements IItemService {
     }
 
     public List<Item> findFoodsByDescription(String localId, String description) {
-        // Fetch items from the repository
         List<Item> items = itemRepository.findFoodsByDescription(localId, description);
 
-        // Sort the list by price in ascending order using Stream API
         return items.stream()
                 .sorted(Comparator.comparingDouble(Item::getPrice))
                 .collect(Collectors.toList());
@@ -52,4 +48,42 @@ public class ItemService implements IItemService {
     public List<Item> findByPriceBetween(int minPrice, int maxPrice){
         return itemRepository.findByPriceBetween(minPrice,maxPrice);
     }
+
+    public double findPriceOfCheapestVisit(String localId) {
+        List<Item> drinks = itemRepository.findAllDrinksByLocalId(localId);
+        OptionalDouble minDrinkPriceOptional = drinks.stream()
+                .mapToDouble(Item::getPrice)
+                .min();
+
+        double minDrinkPrice = minDrinkPriceOptional.isPresent() ? minDrinkPriceOptional.getAsDouble() : 0.0;
+
+        List<Item> foods = itemRepository.findAllFoodsByLocalId(localId);
+        OptionalDouble minFoodsPriceOptional = foods.stream()
+                .mapToDouble(Item::getPrice)
+                .min();
+
+        double minFoodsPrice = minFoodsPriceOptional.isPresent() ? minFoodsPriceOptional.getAsDouble() : 0.0;
+
+        return minDrinkPrice+minFoodsPrice;
+    }
+
+    public List<Item> searchCheapFood(String localId)
+    {
+        List<Item> items = itemRepository.findAllFoodsByLocalId(localId);
+        if (items == null || items.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        double priceSum = items.stream()
+                .mapToDouble(Item::getPrice)
+                .sum();
+        double avgPrice = priceSum / items.size();
+
+        List<Item> returnItems = itemRepository.findAllFoodsByLocalIdAndLowerPriceThanAvg(localId,avgPrice);
+
+        return returnItems.stream()
+                .sorted(Comparator.comparingDouble(Item::getPrice).reversed())
+                .collect(Collectors.toList());
+    }
+
 }

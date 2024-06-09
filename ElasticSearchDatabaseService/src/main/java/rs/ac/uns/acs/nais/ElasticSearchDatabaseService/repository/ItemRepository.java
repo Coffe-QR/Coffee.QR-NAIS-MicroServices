@@ -23,5 +23,22 @@ public interface ItemRepository extends ElasticsearchRepository<Item, String> {
             "]}}")
     List<Item> findFoodsByDescription(String localId, String description);
 
+    @Query("{\"bool\": {\"must\": [" +
+            "{\"match\": {\"localId\": \"?0\"}}," +
+            "{\"match\": {\"type\": \"DRINK\"}}" +
+            "]}}")
+    List<Item> findAllDrinksByLocalId(String localId);
 
+    @Query("{\"bool\": {\"must\": [" +
+            "{\"match\": {\"localId\": \"?0\"}}," +
+            "{\"match\": {\"type\": \"FOOD\"}}" +
+            "]}}")
+    List<Item> findAllFoodsByLocalId(String localId);
+
+    @Query("{\"bool\": {\"must\": [" +
+            "{\"match\": {\"localId\": \"?0\"}}," +
+            "{\"match\": {\"type\": \"FOOD\"}}," +
+            "{\"range\": {\"price\": {\"lt\": \"?1\"}}}" +
+            "]}}")
+    List<Item> findAllFoodsByLocalIdAndLowerPriceThanAvg(String localId,double price);
 }
