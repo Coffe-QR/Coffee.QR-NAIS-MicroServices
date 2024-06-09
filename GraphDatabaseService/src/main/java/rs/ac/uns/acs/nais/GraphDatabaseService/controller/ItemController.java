@@ -1,6 +1,8 @@
 package rs.ac.uns.acs.nais.GraphDatabaseService.controller;
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.acs.nais.GraphDatabaseService.dto.ItemCountPerOrder;
 import rs.ac.uns.acs.nais.GraphDatabaseService.model.Item;
@@ -21,8 +23,8 @@ public class ItemController {
     }
 
     @PostMapping
-    public void addItem(@RequestBody Item item) {
-        itemService.save(item);
+    public ResponseEntity<Item> addItem(@RequestBody Item item) {
+        return new ResponseEntity<>(itemService.save(item), HttpStatus.CREATED);
     }
 
     @GetMapping("findByNameOrDescription")

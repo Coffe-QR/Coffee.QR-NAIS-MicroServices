@@ -10,6 +10,7 @@ import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Local;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.impl.ItemService;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.impl.PDFService;
 
+import javax.xml.transform.Result;
 import java.util.List;
 
 @RestController
@@ -26,8 +27,8 @@ public class ItemController {
     }
 
     @PostMapping
-    public void addItem(@RequestBody Item item) {
-        itemService.save(item);
+    public ResponseEntity<Item> addItem(@RequestBody Item item) {
+        return new ResponseEntity<>(itemService.save(item), HttpStatus.CREATED);
     }
 
     @GetMapping("findByNameOrDescription")

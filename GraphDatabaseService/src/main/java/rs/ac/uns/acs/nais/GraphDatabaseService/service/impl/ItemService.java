@@ -1,14 +1,12 @@
 package rs.ac.uns.acs.nais.GraphDatabaseService.service.impl;
 
 import org.springframework.stereotype.Service;
-import rs.ac.uns.acs.nais.GraphDatabaseService.dto.ItemCountPerOrder;
 import rs.ac.uns.acs.nais.GraphDatabaseService.model.Item;
 import rs.ac.uns.acs.nais.GraphDatabaseService.repository.ItemRepository;
 import rs.ac.uns.acs.nais.GraphDatabaseService.service.IItemService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class ItemService implements IItemService {
@@ -17,7 +15,9 @@ public class ItemService implements IItemService {
     public ItemService(ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
     }
-    public void save(Item item) {itemRepository.save(item);}
+    public Item save(Item item) {
+        return itemRepository.save(item);
+    }
 
     public List<Item> findByNameOrDescription(String name, String description) {
         return itemRepository.findByNameOrDescription(name, description);

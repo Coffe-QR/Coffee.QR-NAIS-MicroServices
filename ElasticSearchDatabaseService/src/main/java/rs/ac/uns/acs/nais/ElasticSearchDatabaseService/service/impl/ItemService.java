@@ -16,7 +16,7 @@ public class ItemService implements IItemService {
     public ItemService(ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
     }
-    public void save(Item item) {itemRepository.save(item);}
+    public Item save(Item item) {return itemRepository.save(item);}
 
     public List<Item> findByNameOrDescription(String name, String description) {
         return itemRepository.findByNameOrDescription(name, description);
