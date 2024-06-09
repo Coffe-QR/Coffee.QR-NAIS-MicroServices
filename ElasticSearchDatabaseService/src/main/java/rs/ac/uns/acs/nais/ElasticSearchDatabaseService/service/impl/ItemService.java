@@ -5,10 +5,7 @@ import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Item;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.ItemRepository;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.IItemService;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,17 +45,22 @@ public class ItemService implements IItemService {
                 .collect(Collectors.toList());
     }
 
-    public double findAvgPriceOfDrinksByLocalId(String localId) {
-        List<Item> items = itemRepository.findAllDrinksByLocalId(localId);
-
-        if (items == null || items.isEmpty()) {
-            return 0.0;
-        }
-
-        double priceSum = items.stream()
+    public double findPriceOfCheapestVisit(String localId) {
+        List<Item> drinks = itemRepository.findAllDrinksByLocalId(localId);
+        OptionalDouble minDrinkPriceOptional = drinks.stream()
                 .mapToDouble(Item::getPrice)
-                .sum();
-        return priceSum / items.size();
+                .min();
+
+        double minDrinkPrice = minDrinkPriceOptional.isPresent() ? minDrinkPriceOptional.getAsDouble() : 0.0;
+
+        List<Item> foods = itemRepository.findAllFoodsByLocalId(localId);
+        OptionalDouble minFoodsPriceOptional = foods.stream()
+                .mapToDouble(Item::getPrice)
+                .min();
+
+        double minFoodsPrice = minFoodsPriceOptional.isPresent() ? minFoodsPriceOptional.getAsDouble() : 0.0;
+
+        return minDrinkPrice+minFoodsPrice;
     }
 
     public List<Item> searchCheapFood(String localId)

@@ -52,9 +52,9 @@ public class ItemController {
         return itemService.findFoodsByDescription(localId,description);
     }
 
-    @GetMapping("/getAveragePriceOfDrinks")
-    public double getAveragePriceOfDrinks(@RequestParam String localId) {
-        return itemService.findAvgPriceOfDrinksByLocalId(localId);
+    @GetMapping("/findPriceOfCheapestVisit")
+    public double findPriceOfCheapestVisit(@RequestParam String localId) {
+        return itemService.findPriceOfCheapestVisit(localId);
     }
 
     @GetMapping("/search/cheapFood")
