@@ -75,7 +75,11 @@ public class ItemService implements IItemService {
                 .sum();
         double avgPrice = priceSum / items.size();
 
-        return itemRepository.findAllFoodsByLocalIdAndLowerPriceThanAvg(localId,avgPrice);
+        List<Item> returnItems = itemRepository.findAllFoodsByLocalIdAndLowerPriceThanAvg(localId,avgPrice);
+
+        return returnItems.stream()
+                .sorted(Comparator.comparingDouble(Item::getPrice).reversed())
+                .collect(Collectors.toList());
     }
 
 }
