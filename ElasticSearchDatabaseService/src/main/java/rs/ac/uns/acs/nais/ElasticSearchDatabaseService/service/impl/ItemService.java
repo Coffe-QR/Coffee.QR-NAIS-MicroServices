@@ -2,6 +2,7 @@ package rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.impl;
 
 import org.springframework.stereotype.Service;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Item;
+import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Local;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.ItemRepository;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.IItemService;
 
@@ -47,5 +48,8 @@ public class ItemService implements IItemService {
         return items.stream()
                 .sorted(Comparator.comparingDouble(Item::getPrice))
                 .collect(Collectors.toList());
+    }
+    public List<Item> findByPriceBetween(int minPrice, int maxPrice){
+        return itemRepository.findByPriceBetween(minPrice,maxPrice);
     }
 }

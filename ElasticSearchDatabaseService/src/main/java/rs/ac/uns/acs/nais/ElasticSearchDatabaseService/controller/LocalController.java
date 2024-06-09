@@ -66,6 +66,12 @@ public class LocalController {
         return localService.findByCity(city);
     }
 
+
+    @GetMapping("/searchByCapacityBetween")
+    public List<Local> getByCapacityBetween(@RequestParam int minCapacity, @RequestParam int maxCapacity) {
+        return localService.findByCapacityBetween(minCapacity,maxCapacity);
+    }
+
     // ML #1
     @GetMapping("/searchByCountryAndCapacitySorted")
     public Page<Local> searchByCountryAndCapacitySorted(
@@ -126,14 +132,29 @@ public class LocalController {
         }
     }
 
-    @GetMapping("/city/{city}/pdf")
-    public ResponseEntity<byte[]> getLocalsPDF(@PathVariable String city) {
+//    @GetMapping("/city/{city}/pdf")
+//    public ResponseEntity<byte[]> getLocalsPDF(@PathVariable String city) {
+//        try {
+//            byte[] pdfContent = pdfService.generatePDFForCity(city);
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.APPLICATION_PDF);
+//            String filename = "locals_" + city + ".pdf";
+//            headers.setContentDispositionFormData("attachment", filename);
+//            return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
+
+    @GetMapping("/pdf/by-capacity")
+    public ResponseEntity<byte[]> getPDFByCapacityRange(@RequestParam int minCapacity, @RequestParam int maxCapacity) {
         try {
-            byte[] pdfContent = pdfService.generatePDFForCity(city);
+            byte[] pdfContent = pdfService.generatePDFForCapacity(minCapacity, maxCapacity);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            String filename = "locals_" + city + ".pdf";
+            String filename = "locals_capacity_range_" + minCapacity + "_to_" + maxCapacity + ".pdf";
             headers.setContentDispositionFormData("attachment", filename);
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
             return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

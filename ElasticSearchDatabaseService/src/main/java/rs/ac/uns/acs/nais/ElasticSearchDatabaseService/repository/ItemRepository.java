@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends ElasticsearchRepository<Item, String> {
     List<Item> findByNameOrDescription(String name, String description);
+
+    @Query("{\"range\" : {\"price\" : {\"gte\" : ?0, \"lte\" : ?1}}}")
+    List<Item> findByPriceBetween(int minPrice, int maxPrice);
     @Query("{\"bool\": {\"must\": {\"match\": {\"localId\": \"?0\"}}}}")
     List<Item> getAllItemsForLocalId(String localId);
 

@@ -49,6 +49,15 @@ public class LocalService implements ILocalService {
         return localRepository.findByCity(city);
     }
 
+    public List<Local> findByCapacityBetween(int minCapacity, int maxCapacity)
+    {
+        return localRepository.findByCapacityBetween(minCapacity,maxCapacity);
+    }
+
+
+
+
+
     // ML #1
     public Page<Local> getLocalsByCountryAndCapacitySorted(String country, int minCapacity, int maxCapacity, int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "capacity");
