@@ -168,5 +168,11 @@ public class LocalController {
         }
     }
 
+    @GetMapping("/searchCheapLocalsInCity")
+    public ResponseEntity<List<Local>> searchCheapLocalsInCity(@RequestParam String city) {
+        List<Local> locals = localService.findAllByCityAndSortByAvgPrice(city);
+        return ResponseEntity.ok(locals);
+    }
+
 
 }

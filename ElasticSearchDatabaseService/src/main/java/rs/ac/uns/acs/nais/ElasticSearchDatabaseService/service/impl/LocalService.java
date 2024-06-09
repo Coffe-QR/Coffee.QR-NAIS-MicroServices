@@ -11,6 +11,8 @@ import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.ItemRepository
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.LocalRepository;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.ILocalService;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,6 +62,17 @@ public class LocalService implements ILocalService {
         return localRepository.findByCapacityBetween(minCapacity,maxCapacity);
     }
 
+    public double calculateAvgPrice(Local local) {
+        List<Item> itemsForLocal = itemRepository.getAllItemsForLocalId(local.getId());
+        if (itemsForLocal == null || itemsForLocal.isEmpty()) {
+            return 999999;
+        }
+
+        double priceSum = itemsForLocal.stream()
+                .mapToDouble(Item::getPrice)
+                .sum();
+        return (priceSum / itemsForLocal.size());
+    }
 
 
 
@@ -102,7 +115,13 @@ public class LocalService implements ILocalService {
         return localRepository.findByIdIn(localIds);
     }
 
-
+    public List<Local> findAllByCityAndSortByAvgPrice(String city)
+    {
+        List<Local> localsInCity = findByCity(city);
+        return localsInCity.stream()
+                .sorted(Comparator.comparingDouble(this::calculateAvgPrice))
+                .collect(Collectors.toList());
+    }
 
 
 
