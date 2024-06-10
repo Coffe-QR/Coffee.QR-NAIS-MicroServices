@@ -11,7 +11,6 @@ import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.ItemRepository
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.repository.LocalRepository;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.ILocalService;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -98,10 +97,6 @@ public class LocalService implements ILocalService {
         return localRepository.findByCountryAndNameOrMinimumCapacity(country, name, capacity, minimumShouldMatch, pageable);
     }
 
-
-    public List<Local> getLocalsInCitySortedByAverageItemPrice(String city) {
-        return localRepository.findLocalsInCitySortedByAverageItemPrice(city);
-    }
 
     public List<Local> findLocalsByItemDescription(String description) {
         // Fetch items that contain the description

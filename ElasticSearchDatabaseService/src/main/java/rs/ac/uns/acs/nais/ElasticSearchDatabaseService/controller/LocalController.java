@@ -1,7 +1,6 @@
 package rs.ac.uns.acs.nais.ElasticSearchDatabaseService.controller;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.impl.LocalService
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.impl.PDFService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/locals.json")
@@ -42,8 +42,8 @@ public class LocalController {
     }
 
     @GetMapping("/{id}")
-    public Local getLocalById(@PathVariable String id) {
-        return localService.findLocalById(id).orElse(null);
+    public Optional<Local> getLocalById(@PathVariable String id) {
+        return localService.findLocalById(id);
     }
 
     @DeleteMapping("/{id}")
@@ -116,19 +116,6 @@ public class LocalController {
                 name = "";
             }
             List<Local> results = localService.getLocalsByCriteria(country, name, capacity, page,size);
-            if (results.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No results found");
-            }
-            return ResponseEntity.ok(results);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("/city-sorted-by-average-price")
-    public ResponseEntity<?> getLocalsInCitySortedByAverageItemPrice(@RequestParam String city) {
-        try {
-            List<Local> results = localService.getLocalsInCitySortedByAverageItemPrice(city);
             if (results.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No results found");
             }

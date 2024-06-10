@@ -63,41 +63,8 @@ public interface LocalRepository extends ElasticsearchRepository<Local, String> 
      * @param capacity minimalni kapacitet
      * @return lista lokalnih objekata koji ispunjavaju uslove pretrage
      */
-    @Query("{\"bool\": {\"must\": [{\"term\": {\"country\": \"?0\"}}, {\"range\": {\"capacity\": {\"gte\": ?2}}}], \"should\": [{\"match\": {\"name\": \"?1\"}}], \"minimum_should_match\": ?3}}")
+    @Query("{\"bool\": {\"must\": [{\"term\": {\"country\": \"?0\"}}, {\"range\": {\"capacity\": {\"gte\": ?2}}}], \"should\": [{\"match_phrase\": {\"name\": \"?1\"}}], \"minimum_should_match\": ?3}}")
     List<Local> findByCountryAndNameOrMinimumCapacity(String country, String name, int capacity, int minimumShouldMatch, Pageable pageable);
-
-    /**
-     * Pronalazi sve lokale u određenom gradu i sortira ih po proseku cena itema koje sadrže.
-     *
-     * @param city naziv grada
-     * @return lista lokalnih objekata sortiranih po proseku cena itema
-     */
-    @Query("{"
-            + "\"bool\": {"
-            + "  \"must\": [{\"term\": {\"city\": \"?0\"}}]"
-            + "},"
-            + "\"aggs\": {"
-            + "  \"by_local\": {"
-            + "    \"terms\": {"
-            + "      \"field\": \"localId.keyword\","
-            + "      \"size\": 1000"
-            + "    },"
-            + "    \"aggs\": {"
-            + "      \"average_price\": {"
-            + "        \"avg\": {"
-            + "          \"field\": \"price\""
-            + "        }"
-            + "      }"
-            + "    }"
-            + "  }"
-            + "},"
-            + "\"sort\": [{"
-            + "  \"average_price\": {"
-            + "    \"order\": \"asc\""
-            + "  }"
-            + "}]"
-            + "}")
-    List<Local> findLocalsInCitySortedByAverageItemPrice(String city);
 
     List<Local> findByIdIn(List<String> ids);
 
