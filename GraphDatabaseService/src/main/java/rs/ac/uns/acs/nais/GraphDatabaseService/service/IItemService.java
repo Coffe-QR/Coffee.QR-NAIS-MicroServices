@@ -14,5 +14,5 @@ public interface IItemService {
 
     public Item findItemById(String id);
 
-    public void deleteItem(String id);
+    public boolean deleteItem(String id);
 }

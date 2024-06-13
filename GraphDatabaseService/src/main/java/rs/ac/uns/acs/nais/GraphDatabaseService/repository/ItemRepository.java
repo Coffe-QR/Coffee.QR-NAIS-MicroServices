@@ -3,6 +3,7 @@ package rs.ac.uns.acs.nais.GraphDatabaseService.repository;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import rs.ac.uns.acs.nais.GraphDatabaseService.dto.ItemCountPerOrder;
 import rs.ac.uns.acs.nais.GraphDatabaseService.model.Customer;
@@ -82,4 +83,38 @@ public interface ItemRepository extends Neo4jRepository<Item, String> {
             "SET i.price = i.price * $increaseFactor " +
             "RETURN i")
     List<Item> increasePriceOfTopThreeItems(String localId, double increaseFactor);
+
+
+
+    /*===========================================*/
+    @Query("MATCH (i:Item)<-[:ORDERED]-(o:Order) " +
+            "WITH i, COUNT(o) AS orderCount " +
+            "ORDER BY orderCount DESC " +
+            "LIMIT 30 " +
+            "RETURN i")
+    List<Item> findTop30SoldItems();
+
+
+    @Query("MATCH (i:Item {id: $itemId})<-[:ORDERED]-(o:Order) " +
+            "RETURN COUNT(o) AS purchaseCount")
+    Long findItemPurchaseCount(@Param("itemId") String itemId);
+
+
+    @Query("MATCH (i:Item) WHERE NOT EXISTS { MATCH (i)<-[:ORDERED]-(o:Order) WHERE o.date >= date() - duration('P6M') } RETURN i")
+    List<Item> findItemsNotSoldInLastSixMonths();
+
+    @Query("MATCH (i:Item {id: $itemId})<-[:ORDERED]-(o:Order) RETURN MAX(o.date) AS lastSoldDate")
+    String findLastSoldDateForItem(String itemId);
+
+    @Query("WITH $budget AS maxBudget " +
+            "MATCH (i:Item) " +
+            "WHERE i.price <= maxBudget " +
+            "WITH collect(i) AS items, maxBudget " +
+            "UNWIND range(0, size(items) - 1) AS idx " +
+            "WITH items[idx] AS item, reduce(total = 0, x IN items[0..idx+1] | total + x.price) AS total " +
+            "WHERE total <= maxBudget " +
+            "RETURN collect(item) AS recommendedItems")
+    List<Item> findItemsWithinBudget(double budget);
+
 }
+
