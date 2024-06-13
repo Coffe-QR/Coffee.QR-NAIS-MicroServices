@@ -11,6 +11,7 @@ import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.model.Local;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.impl.LocalService;
 import rs.ac.uns.acs.nais.ElasticSearchDatabaseService.service.impl.PDFService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -160,6 +161,28 @@ public class LocalController {
         List<Local> locals = localService.findAllByCityAndSortByAvgPrice(city);
         return ResponseEntity.ok(locals);
     }
+
+    @GetMapping("/pdf/merged")
+    public ResponseEntity<byte[]> getMergedPDF(@RequestParam int minCapacity, @RequestParam int maxCapacity, @RequestParam int minPrice, @RequestParam int maxPrice, @RequestParam String desc) {
+        try {
+            byte[] pdfByCapacity = pdfService.generatePDFForCapacity(minCapacity, maxCapacity);
+            byte[] pdfByPrice = pdfService.generatePDFForPrice(minPrice, maxPrice);
+            byte[] pdfByDescription = pdfService.generatePDFBasedOnItemDescription(desc);
+
+            List<byte[]> pdfsToMerge = Arrays.asList(pdfByCapacity, pdfByPrice, pdfByDescription);
+            byte[] mergedPDF = pdfService.mergePDFs(pdfsToMerge);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            String filename = "merged_document.pdf";
+            headers.setContentDispositionFormData("attachment", filename);
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            return new ResponseEntity<>(mergedPDF, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
 
 }

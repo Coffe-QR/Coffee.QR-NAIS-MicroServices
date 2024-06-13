@@ -211,4 +211,33 @@ public class PDFService {
         return byteArrayOutputStream.toByteArray();
     }
 
+    public byte[] mergePDFs(List<byte[]> pdfFiles) {
+        Document document = new Document();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            PdfCopy copy = new PdfCopy(document, outputStream);
+            document.open();
+            PdfReader reader;
+            PdfImportedPage page;
+
+            // Loop through each byte array
+            for (byte[] pdfFile : pdfFiles) {
+                reader = new PdfReader(pdfFile);
+
+                // Loop through each page in the current reader
+                int numberOfPages = reader.getNumberOfPages();
+                for (int currentPage = 1; currentPage <= numberOfPages; currentPage++) {
+                    page = copy.getImportedPage(reader, currentPage);
+                    copy.addPage(page);
+                }
+                reader.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            document.close();
+        }
+        return outputStream.toByteArray();
+    }
+
 }
