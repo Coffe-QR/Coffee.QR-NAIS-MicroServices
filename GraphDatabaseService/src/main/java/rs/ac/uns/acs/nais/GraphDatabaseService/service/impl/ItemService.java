@@ -1,14 +1,12 @@
 package rs.ac.uns.acs.nais.GraphDatabaseService.service.impl;
 
 import org.springframework.stereotype.Service;
-import rs.ac.uns.acs.nais.GraphDatabaseService.dto.ItemCountPerOrder;
 import rs.ac.uns.acs.nais.GraphDatabaseService.model.Item;
 import rs.ac.uns.acs.nais.GraphDatabaseService.repository.ItemRepository;
 import rs.ac.uns.acs.nais.GraphDatabaseService.service.IItemService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class ItemService implements IItemService {
@@ -28,11 +26,14 @@ public class ItemService implements IItemService {
     }
 
     public Item findItemById(String id) {
-        return itemRepository.findById(id).get();
+        return itemRepository.findById(id).orElse(null);
     }
 
-    public void deleteItem(String id) {
-        itemRepository.deleteById(id);
+    public boolean deleteItem(String id) {
+        Item item = itemRepository.findById(id).get();
+        if(item == null) return false;
+        itemRepository.delete(item); //.deleteById(id);
+        return true;
     }
 
     public void updateOrderedRelationship(Long orderId, String newValue) {
@@ -78,5 +79,27 @@ public class ItemService implements IItemService {
 
     public List<Item> increasePriceOfTopThreeItems(String localId, double increaseFactor) {
         return itemRepository.increasePriceOfTopThreeItems(localId, increaseFactor);
+    }
+
+
+    /*==================================================*/
+    public List<Item> findTop30SoldItems() {
+        return itemRepository.findTop30SoldItems();
+    }
+
+    public Long getItemPurchaseCount(String itemId) {
+        return itemRepository.findItemPurchaseCount(itemId);
+    }
+
+    public List<Item> getItemsNotSoldInLastSixMonths() {
+        return itemRepository.findItemsNotSoldInLastSixMonths();
+    }
+
+    public String getLastSoldDateForItem(String itemId) {
+        return itemRepository.findLastSoldDateForItem(itemId);
+    }
+
+    public List<Item> getItemsWithinBudget(double budget) {
+        return itemRepository.findItemsWithinBudget(budget);
     }
 }

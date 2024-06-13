@@ -1,11 +1,8 @@
 package rs.ac.uns.acs.nais.GraphDatabaseService.service;
 
-import org.springframework.stereotype.Service;
 import rs.ac.uns.acs.nais.GraphDatabaseService.model.Item;
-import rs.ac.uns.acs.nais.GraphDatabaseService.repository.ItemRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IItemService {
 
@@ -17,5 +14,5 @@ public interface IItemService {
 
     public Item findItemById(String id);
 
-    public void deleteItem(String id);
+    public boolean deleteItem(String id);
 }
